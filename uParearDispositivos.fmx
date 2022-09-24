@@ -1,0 +1,53 @@
+object frmParearDispositivos: TfrmParearDispositivos
+  Left = 0
+  Top = 0
+  Caption = 'Parear dispositivos'
+  ClientHeight = 434
+  ClientWidth = 296
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object lbNovosDispositivos: TListBox
+    Align = Client
+    Size.Width = 296.000000000000000000
+    Size.Height = 330.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    DisableFocusEffect = True
+    DefaultItemStyles.ItemStyle = ''
+    DefaultItemStyles.GroupHeaderStyle = ''
+    DefaultItemStyles.GroupFooterStyle = ''
+    Viewport.Width = 292.000000000000000000
+    Viewport.Height = 326.000000000000000000
+  end
+  object btnProcurarDispositivos: TButton
+    Align = Top
+    Size.Width = 296.000000000000000000
+    Size.Height = 30.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'Procurar dispositivos'
+    OnClick = btnProcurarDispositivosClick
+  end
+  object btnParear: TButton
+    Align = Top
+    Position.Y = 30.000000000000000000
+    Size.Width = 296.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Text = 'Parear dispos. selecionado'
+    OnClick = btnParearClick
+  end
+  object btnSair: TButton
+    Align = Bottom
+    Position.Y = 392.000000000000000000
+    Size.Width = 296.000000000000000000
+    Size.Height = 42.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    Text = 'Sair'
+    OnClick = btnSairClick
+  end
+end

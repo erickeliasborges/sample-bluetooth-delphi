@@ -1,0 +1,132 @@
+unit uChat;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.ListBox, FMX.StdCtrls, FMX.Edit,
+  FMX.Layouts, FMX.Memo, System.Bluetooth, uChatManager, FMX.Controls.Presentation, uParearDispositivos,
+  FMX.ScrollBox, FMX.Memo.Types;
+
+type
+  TfrmChat = class(TForm)
+    memChat: TMemo;
+    edNovaMensagem: TEdit;
+    panSeleciDispositivo: TPanel;
+    cbDispositivos: TComboBox;
+    btnAtualizar: TButton;
+    panEnviar: TPanel;
+    btnProcurar: TButton;
+    PnMain: TPanel;
+    btnEnviar: TButton;
+    procedure FormShow(Sender: TObject);
+    procedure btnAtualizarClick(Sender: TObject);
+    procedure btnEnviarClick(Sender: TObject);
+    procedure cbDispositivosChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure edNovaMensagemKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure btnProcurarClick(Sender: TObject);
+    procedure FormVirtualKeyboardShown(Sender: TObject; KeyboardVisible: Boolean; const Bounds: TRect);
+    procedure FormVirtualKeyboardHidden(Sender: TObject; KeyboardVisible: Boolean; const Bounds: TRect);
+  private
+    FChatManager: TChatManager;
+    FLastName: string;
+    procedure AtualizarDispositivos;
+    procedure OnNewText(const Sender: TObject; const AText: string; const aDeviceName: string);
+  public
+    { Public declarations }
+  end;
+
+var
+  frmChat: TfrmChat;
+
+implementation
+
+{$R *.fmx}
+
+procedure TfrmChat.btnEnviarClick(Sender: TObject);
+begin
+  if cbDispositivos.Selected <> nil then
+  begin
+    FChatManager.SendText(edNovaMensagem.Text);
+    edNovaMensagem.Text := '';
+  end;
+end;
+
+procedure TfrmChat.btnProcurarClick(Sender: TObject);
+begin
+  FrmParearDispositivos := TfrmParearDispositivos.Create(nil);
+  FrmParearDispositivos.ChatManager := FChatManager;
+  FrmParearDispositivos.Show;
+end;
+
+procedure TfrmChat.cbDispositivosChange(Sender: TObject);
+begin
+  FChatManager.SelectedDevice := cbDispositivos.Selected.Index;
+end;
+
+procedure TfrmChat.edNovaMensagemKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+  if key = vkReturn then
+    btnEnviarClick(btnEnviar);
+end;
+
+procedure TfrmChat.FormCreate(Sender: TObject);
+begin
+  FChatManager := TChatManager.Create;
+  if not FChatManager.HasBluetoothDevice then
+  begin
+    ShowMessage('Você não possui um adaptador bluetooth.');
+    Application.Terminate;
+  end;
+  FChatManager.OnTextReceived := OnNewText;
+  FChatManager.OnTextSent := OnNewText;
+end;
+
+procedure TfrmChat.FormShow(Sender: TObject);
+begin
+  AtualizarDispositivos();
+end;
+
+procedure TfrmChat.FormVirtualKeyboardHidden(Sender: TObject; KeyboardVisible: Boolean; const Bounds: TRect);
+begin
+  PnMain.align := TAlignLayout.Client;
+end;
+
+procedure TfrmChat.FormVirtualKeyboardShown(Sender: TObject; KeyboardVisible: Boolean; const Bounds: TRect);
+begin
+  PnMain.align := TAlignLayout.Top;
+  PnMain.Height := ClientHeight - Bounds.height {$IFDEF ANDROID} + 20 {$ENDIF};
+  memChat.GoToTextEnd;
+end;
+
+procedure TfrmChat.OnNewText(const Sender: TObject; const AText, aDeviceName: string);
+begin
+  TThread.Synchronize(nil,
+    procedure begin
+      if FLastName <> aDeviceName then
+      begin
+        memChat.Lines.Add(' ' + aDeviceName + ' :');
+        FLastName := aDeviceName;
+      end;
+      memChat.Lines.Add('     ' + AText);
+      memChat.GoToTextEnd;
+    end);
+end;
+
+procedure TfrmChat.btnAtualizarClick(Sender: TObject);
+begin
+  AtualizarDispositivos();
+end;
+
+procedure TfrmChat.AtualizarDispositivos;
+var
+  I: Integer;
+begin
+  cbDispositivos.Clear;
+  if FChatManager.KnownDevices <> nil then
+    for I := 0 to FChatManager.KnownDevices.Count - 1 do
+      cbDispositivos.Items.Add(FChatManager.KnownDevices.Items[I].DeviceName);
+end;
+
+end.

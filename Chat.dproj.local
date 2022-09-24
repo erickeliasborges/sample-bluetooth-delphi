@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<ActiveMobileDevice>
+		<NoProfile Android="409b02e5"/>
+	</ActiveMobileDevice>
+	<Transactions>
+    <Transaction>2020/03/29 19:30:34.000.944,C:\Users\PC01\Desktop\Blue\BlueChat.dproj=C:\Users\PC01\Desktop\Blue\BlueChat.dproj</Transaction>
+    <Transaction>2022/09/23 20:44:00.017,=C:\Users\Administrador\Desktop\bluetooth-delphi\uParearDispositivos.pas</Transaction>
+    <Transaction>2022/09/23 20:46:50.917,=C:\Users\Administrador\Desktop\bluetooth-delphi\uChat.pas</Transaction>
+    <Transaction>2022/09/23 20:49:22.028,C:\Users\Administrador\Desktop\bluetooth-delphi\Chat.dproj=C:\Users\Administrador\Desktop\bluetooth-delphi\BlueChat.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

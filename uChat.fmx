@@ -1,0 +1,104 @@
+object frmChat: TfrmChat
+  Left = 0
+  Top = 0
+  Caption = 'Chat'
+  ClientHeight = 434
+  ClientWidth = 338
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnShow = FormShow
+  OnVirtualKeyboardShown = FormVirtualKeyboardShown
+  OnVirtualKeyboardHidden = FormVirtualKeyboardHidden
+  DesignerMasterStyle = 0
+  object PnMain: TPanel
+    Align = Client
+    Size.Width = 338.000000000000000000
+    Size.Height = 434.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object panEnviar: TPanel
+      Align = Bottom
+      Position.Y = 392.000000000000000000
+      Size.Width = 338.000000000000000000
+      Size.Height = 42.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object edNovaMensagem: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Client
+        TabOrder = 1
+        Size.Width = 290.000000000000000000
+        Size.Height = 42.000000000000000000
+        Size.PlatformDefault = False
+        OnKeyUp = edNovaMensagemKeyUp
+      end
+      object btnEnviar: TButton
+        Align = Right
+        Position.X = 290.000000000000000000
+        Size.Width = 48.000000000000000000
+        Size.Height = 42.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'playtoolbutton'
+        TabOrder = 2
+        Text = 'Send Message'
+        OnClick = btnEnviarClick
+      end
+    end
+    object panSeleciDispositivo: TPanel
+      Align = Top
+      Size.Width = 338.000000000000000000
+      Size.Height = 42.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object cbDispositivos: TComboBox
+        Align = Client
+        Size.Width = 242.000000000000000000
+        Size.Height = 42.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        OnChange = cbDispositivosChange
+      end
+      object btnAtualizar: TButton
+        Align = Left
+        Size.Width = 48.000000000000000000
+        Size.Height = 42.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'refreshtoolbutton'
+        TabOrder = 3
+        Text = 'btnAtualizar'
+        OnClick = btnAtualizarClick
+      end
+      object btnProcurar: TButton
+        Align = Right
+        Position.X = 290.000000000000000000
+        Size.Width = 48.000000000000000000
+        Size.Height = 42.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'searchtoolbutton'
+        TabOrder = 5
+        Text = 'Pair'
+        OnClick = btnProcurarClick
+      end
+    end
+    object memChat: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      ReadOnly = True
+      StyledSettings = [Family, Size, FontColor]
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      TextSettings.WordWrap = True
+      Align = Client
+      Opacity = 0.699999988079071000
+      Padding.Right = 30.000000000000000000
+      Size.Width = 338.000000000000000000
+      Size.Height = 350.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      TabStop = False
+      Viewport.Width = 334.000000000000000000
+      Viewport.Height = 346.000000000000000000
+    end
+  end
+end
