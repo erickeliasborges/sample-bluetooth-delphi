@@ -33,8 +33,6 @@ type
     FUltimoNome: string;
     procedure AtualizarDispositivos;
     procedure ValidacoesAoEnviarOuReceberMensagemPeloBluetooth(const Sender: TObject; const AMensagem, ANomeDispositivo: string);
-    procedure ValidarBluetoothLigado;
-    procedure SetMensagemNoChat(const AMensagem, ANomeDispositivo: string);
   public
     { Public declarations }
   end;
@@ -73,19 +71,14 @@ begin
     btnEnviarClick(btnEnviar);
 end;
 
-procedure TfrmChat.ValidarBluetoothLigado;
-begin
-  if (FChatManager.HasBluetoothDevice) then
-    Exit;
-
-  ShowMessage('Você não possui um adaptador bluetooth ou o mesmo não está ligado.');
-  Application.Terminate;
-end;
-
 procedure TfrmChat.FormCreate(Sender: TObject);
 begin
   FChatManager := TChatManager.Create;
-  ValidarBluetoothLigado();
+  if not FChatManager.HasBluetoothDevice then
+  begin
+    ShowMessage('Você não possui um adaptador bluetooth.');
+    Application.Terminate;
+  end;
   FChatManager.OnTextReceived := ValidacoesAoEnviarOuReceberMensagemPeloBluetooth;
   FChatManager.OnTextSent := ValidacoesAoEnviarOuReceberMensagemPeloBluetooth;
 end;
@@ -93,25 +86,15 @@ end;
 procedure TfrmChat.ValidacoesAoEnviarOuReceberMensagemPeloBluetooth(const Sender: TObject; const AMensagem, ANomeDispositivo: string);
 begin
   TThread.Synchronize(nil,
-    procedure
-    begin
-      SetMensagemNoChat(AMensagem, ANomeDispositivo)
+    procedure begin
+      if (FUltimoNome <> ANomeDispositivo) then
+      begin
+        memChat.Lines.Add(' ' + ANomeDispositivo + ' :');
+        FUltimoNome := ANomeDispositivo;
+      end;
+      memChat.Lines.Add('     ' + AMensagem);
+      memChat.GoToTextEnd;
     end);
-end;
-
-procedure TfrmChat.SetMensagemNoChat(const AMensagem, ANomeDispositivo: string);
-var
-  LDispositivoDiferenteEnviandoMensagem: Boolean;
-begin
-  LDispositivoDiferenteEnviandoMensagem := (FUltimoNome <> ANomeDispositivo);
-  if (LDispositivoDiferenteEnviandoMensagem) then
-  begin
-    memChat.Lines.Add(' ' + ANomeDispositivo + ' :');
-    FUltimoNome := ANomeDispositivo;
-  end;
-
-  memChat.Lines.Add('     ' + AMensagem);
-  memChat.GoToTextEnd;
 end;
 
 procedure TfrmChat.FormShow(Sender: TObject);

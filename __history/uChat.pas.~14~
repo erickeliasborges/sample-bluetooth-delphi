@@ -92,24 +92,16 @@ end;
 
 procedure TfrmChat.ValidacoesAoEnviarOuReceberMensagemPeloBluetooth(const Sender: TObject; const AMensagem, ANomeDispositivo: string);
 begin
-  TThread.Synchronize(nil,
-    procedure
-    begin
-      SetMensagemNoChat(AMensagem, ANomeDispositivo)
-    end);
+  TThread.Synchronize(nil, SetMensagemNoChat(AMensagem, ANomeDispositivo));
 end;
 
 procedure TfrmChat.SetMensagemNoChat(const AMensagem, ANomeDispositivo: string);
-var
-  LDispositivoDiferenteEnviandoMensagem: Boolean;
 begin
-  LDispositivoDiferenteEnviandoMensagem := (FUltimoNome <> ANomeDispositivo);
-  if (LDispositivoDiferenteEnviandoMensagem) then
+  if (FUltimoNome <> ANomeDispositivo) then
   begin
     memChat.Lines.Add(' ' + ANomeDispositivo + ' :');
     FUltimoNome := ANomeDispositivo;
   end;
-
   memChat.Lines.Add('     ' + AMensagem);
   memChat.GoToTextEnd;
 end;

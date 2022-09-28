@@ -100,16 +100,12 @@ begin
 end;
 
 procedure TfrmChat.SetMensagemNoChat(const AMensagem, ANomeDispositivo: string);
-var
-  LDispositivoDiferenteEnviandoMensagem: Boolean;
 begin
-  LDispositivoDiferenteEnviandoMensagem := (FUltimoNome <> ANomeDispositivo);
-  if (LDispositivoDiferenteEnviandoMensagem) then
+  if (FUltimoNome <> ANomeDispositivo) then
   begin
     memChat.Lines.Add(' ' + ANomeDispositivo + ' :');
     FUltimoNome := ANomeDispositivo;
   end;
-
   memChat.Lines.Add('     ' + AMensagem);
   memChat.GoToTextEnd;
 end;
