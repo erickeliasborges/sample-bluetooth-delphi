@@ -1,0 +1,123 @@
+unit uTesteBluetooth;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.ListBox, FMX.StdCtrls, FMX.Edit,
+  FMX.Layouts, FMX.Memo, System.Bluetooth, FMX.Controls.Presentation, uParearDispositivos,
+  FMX.ScrollBox, FMX.Memo.Types, System.Bluetooth.Components, StrUtils;
+
+type
+  TfrmTesteBluetooth = class(TForm)
+    Bluetooth: TBluetooth;
+    panSeleciDispositivo: TPanel;
+    cbDispositivos: TComboBox;
+    btnAtualizar: TButton;
+    procedure FormShow(Sender: TObject);
+    procedure btnAtualizarClick(Sender: TObject);
+    procedure cbDispositivosChange(Sender: TObject);
+
+  private
+    FSocket: TBluetoothSocket;
+    function GetDispositivoBluetoothPeloNome(ANome: String): TBluetoothDevice;
+    procedure FinalDaDescobertaDosDispositivos(const Sender: TObject;
+      const ADeviceList: TBluetoothDeviceList);
+    procedure AdicionarItemComboDispositivos(ANome: String; APareado: Boolean);
+    function DispositivoPareado(AItemCombo: String): Boolean;
+    function GetDispositivoBluetoothNaoPareadoPeloNome(
+      ANome: String): TBluetoothDevice;
+    procedure ParearDispositivo;
+
+  public
+    { Public declarations }
+  end;
+
+var
+  frmTesteBluetooth: TfrmTesteBluetooth;
+
+implementation
+
+{$R *.fmx}
+
+procedure TfrmTesteBluetooth.btnAtualizarClick(Sender: TObject);
+begin
+  Bluetooth.CurrentManager.StartDiscovery(5000);
+end;
+
+procedure TfrmTesteBluetooth.cbDispositivosChange(Sender: TObject);
+begin
+  ParearDispositivo();
+end;
+
+procedure TfrmTesteBluetooth.ParearDispositivo;
+var
+  LDevice: TBluetoothDevice;
+begin
+  if (cbDispositivos.Selected = nil) or (DispositivoPareado(cbDispositivos.Selected.Text)) then
+    Exit;
+
+  LDevice := GetDispositivoBluetoothNaoPareadoPeloNome(cbDispositivos.Selected.Text);
+  if (LDevice <> nil) and (not LDevice.IsPaired) then
+  begin
+    Bluetooth.CurrentManager.CurrentAdapter.Pair(LDevice);
+    cbDispositivos.Selected.Text := cbDispositivos.Selected.Text + ' (Pareado)';
+  end;
+  FSocket := LDevice.CreateClientSocket(StringToGUID('{00001202-0000-1000-8000-00805F9B34FB}'), False);
+  if FSocket <> nil then
+    FSocket.Connect;
+
+  FSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(64)));
+end;
+
+function TfrmTesteBluetooth.GetDispositivoBluetoothNaoPareadoPeloNome(ANome: String): TBluetoothDevice;
+var
+  I: Integer;
+begin
+  for I := 0 to Bluetooth.CurrentManager.LastDiscoveredDevices.Count - 1 do
+    if (Bluetooth.CurrentManager.LastDiscoveredDevices[I].DeviceName = cbDispositivos.Selected.Text) then
+    begin
+      Result := Bluetooth.CurrentManager.LastDiscoveredDevices[I];
+      Break;
+    end;
+end;
+
+function TfrmTesteBluetooth.DispositivoPareado(AItemCombo: String): Boolean;
+begin
+  result := AItemCombo.Contains('(Pareado)');
+end;
+
+procedure TfrmTesteBluetooth.FormShow(Sender: TObject);
+begin
+  Bluetooth.CurrentManager.OnDiscoveryEnd := FinalDaDescobertaDosDispositivos;
+  Bluetooth.CurrentManager.StartDiscovery(5000);
+end;
+
+procedure TfrmTesteBluetooth.FinalDaDescobertaDosDispositivos(const Sender: TObject; const ADeviceList: TBluetoothDeviceList);
+var
+  i: Integer;
+  LDispositivo: TBluetoothDevice;
+begin
+  cbDispositivos.Clear;
+  for i := 0 to ADeviceList.Count - 1 do
+    AdicionarItemComboDispositivos(ADeviceList[I].DeviceName, ADeviceList[I].IsPaired);
+end;
+
+procedure TfrmTesteBluetooth.AdicionarItemComboDispositivos(ANome: String; APareado: Boolean);
+begin
+  cbDispositivos.Items.Add(ANome + IfThen(APareado, ' (Pareado)', ''));
+end;
+
+function TfrmTesteBluetooth.GetDispositivoBluetoothPeloNome(ANome: String): TBluetoothDevice;
+var
+  LDispositivo: TBluetoothDevice;
+begin
+  Result := nil;
+  for LDispositivo in Bluetooth.PairedDevices do
+  begin
+    if LDispositivo.DeviceName = ANome then
+      Result := LDispositivo;
+  end;
+end;
+
+end.

@@ -1,0 +1,42 @@
+object frmTesteBluetooth: TfrmTesteBluetooth
+  Left = 0
+  Top = 0
+  Caption = 'TesteBluetooth'
+  ClientHeight = 434
+  ClientWidth = 338
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnShow = FormShow
+  DesignerMasterStyle = 0
+  object panSeleciDispositivo: TPanel
+    Align = Top
+    Size.Width = 338.000000000000000000
+    Size.Height = 42.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object cbDispositivos: TComboBox
+      Align = Client
+      Size.Width = 290.000000000000000000
+      Size.Height = 42.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+    end
+    object btnAtualizar: TButton
+      Align = Right
+      Position.X = 290.000000000000000000
+      Size.Width = 48.000000000000000000
+      Size.Height = 42.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'refreshtoolbutton'
+      TabOrder = 3
+      Text = 'btnAtualizar'
+      OnClick = btnAtualizarClick
+    end
+  end
+  object Bluetooth: TBluetooth
+    Enabled = True
+    Left = 288
+    Top = 96
+  end
+end

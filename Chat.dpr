@@ -16,12 +16,14 @@ uses
   FMX.Forms,
   uChatManager in 'uChatManager.pas',
   uParearDispositivos in 'uParearDispositivos.pas' {frmParearDispositivos},
-  uChat in 'uChat.pas' {frmChat};
+  uChat in 'uChat.pas' {frmChat},
+  uTesteBluetooth in 'uTesteBluetooth.pas' {frmTesteBluetooth};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.CreateForm(TfrmChat, frmChat);
+//  Application.CreateForm(TfrmTesteBluetooth, frmTesteBluetooth);
   Application.Run;
 end.

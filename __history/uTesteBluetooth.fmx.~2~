@@ -1,0 +1,15 @@
+object frmTesteBluetooth: TfrmTesteBluetooth
+  Left = 0
+  Top = 0
+  Caption = 'TesteBluetooth'
+  ClientHeight = 434
+  ClientWidth = 338
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnShow = FormShow
+  OnVirtualKeyboardShown = FormVirtualKeyboardShown
+  OnVirtualKeyboardHidden = FormVirtualKeyboardHidden
+  DesignerMasterStyle = 0
+end
